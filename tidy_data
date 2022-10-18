@@ -1,0 +1,20 @@
+#1 Attendance Data
+#   Read the data from the attendance table and calculate an attendance percentage for each student.
+#   One half day is worth 50% of a full day, and 10 tardies is equal to one absence.
+
+
+#2 Coffee Levels
+# Read the coffee_levels table.
+# Transform the data so that each carafe is in it's own column.
+# Is this the best shape for the data?
+
+
+#3 Cake Recipes
+#   Read the cake_recipes table. This data set contains cake tastiness scores for combinations of different recipes,
+#      oven rack positions, and oven temperatures.
+#   Tidy the data as necessary.
+#   Which recipe, on average, is the best? recipe b
+#   Which oven temperature, on average, produces the best results? 275
+#   Which combination of recipe, rack position, and temperature gives the best result? recipe b, bottom rack,
+#        300 degrees
+

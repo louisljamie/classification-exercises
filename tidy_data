@@ -1,20 +1,89 @@
+# SQL DB tidy_data
+
+
+import pandas as pd
+import numpy as np
+
+import matplotlib.pylab as plt
+import seaborn as sns
+
+import env
+
+
 #1 Attendance Data
 #   Read the data from the attendance table and calculate an attendance percentage for each student.
 #   One half day is worth 50% of a full day, and 10 tardies is equal to one absence.
 
+url = env.get_db_url('tidy_data')
+query = 'SELECT * FROM attendance'
+
+df = pd.read_sql(query, url)
+df
+
+df = df.rename(columns={'Unnamed: 0':'name'})
+df
+
+df = df.melt(id_vars='name', var_name='date', value_name='attend')
+df
+
+df.attend = df.attend.map({'P':1, 'H':.5, 'A':0, 'T':.9})
+df
+
+df.groupby('name').mean()
+
+
 
 #2 Coffee Levels
 # Read the coffee_levels table.
-# Transform the data so that each carafe is in it's own column.
-# Is this the best shape for the data?
 
+query = 'SELECT * FROM coffee_levels'
+
+df = pd.read_sql(query, url)
+df.head()
+
+# Transform the data so that each carafe is in it's own column.
+
+df.pivot_table(index='hour', columns='coffee_carafe')
+df
+
+
+# Is this the best shape for the data?
+NO
 
 #3 Cake Recipes
+
+query = 'SELECT * FROM cake_recipes'
+
+df = pd.read_sql(query, url)
+df
+
 #   Read the cake_recipes table. This data set contains cake tastiness scores for combinations of different recipes,
 #      oven rack positions, and oven temperatures.
 #   Tidy the data as necessary.
+
+df = df.melt(id_vars='recipe:position', var_name='temp', value_name='score')
+df
+
+df[['recipe','position']] = df['recipe:position'].str.split(':', expand=True)
+df
+
+df = df.drop(columns='recipe:position')
+df
+
+
 #   Which recipe, on average, is the best? recipe b
+
+df.groupby('recipe').mean().idxmax()
+df.groupby('recipe').mean().max()
+
 #   Which oven temperature, on average, produces the best results? 275
+df.groupby('temp').mean().sort_values('score').tail(1)
+df.groupby('temp').mean().max()
+
+
 #   Which combination of recipe, rack position, and temperature gives the best result? recipe b, bottom rack,
 #        300 degrees
 
+df.groupby(['recipe','position','temp']).mean().idxmax()
+df.groupby(['recipe','position','temp']).mean().max()
+df.groupby(['recipe', 'position', 'temp']).mean().sort_values('score').tail(1)
